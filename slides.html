@@ -83,14 +83,41 @@
     <section class='left slide'>
       <div class='spacer top'></div>
       <div class='content'>
+        <h2>What I've Tried</h2>
+        
+        <ul>
+        <li>Figuring out how to install GCC via source</li>
+        <li>JRuby install with JDK</li>
+        <li>Installing Ruby via RVM w/ packages</li>
+        <li>Ruby from source with:
+        
+        <ul>
+        <li>libyaml</li>
+        <li>zlib</li>
+        <li>openssl</li>
+        </ul>
+        </li>
+        </ul>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='left slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
         <h2>From the Outside In</h2>
         
         <ul>
         <li>Chef will install as a Ruby gem</li>
-        <li>gcc is needed for chef's native extensions</li>
-        <li>JRuby runs Ruby &amp; installs easily</li>
-        <li>Java is needed for JRuby</li>
-        <li>GNU Stow manages software cleanly</li>
+        <li>RubyGems needs Ruby</li>
+        <li>Ruby needs:
+        
+        <ul>
+        <li>gcc to compile MRI</li>
+        <li>OpenSSL is needed for chef's dependencies</li>
+        <li>zlib is needed for RubyGems and/or chef</li>
+        <li>libyaml is needed for RubyGems and/or chef</li>
+        </ul>
+        </li>
         </ul>
       </div>
       <div class='spacer bottom'></div>
@@ -110,27 +137,9 @@
       <div class='content'>
         <h2>Install GNU Stow</h2>
         
+        <p>GNU Stow manages software packages cleanly</p>
+        
         <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/stow-src&#x000A;$ tar -xzvf stow-2.2.0.tar.gz&#x000A;$ cd stow-2.2.0&#x000A;$ ./configure --prefix=$STOW/stow-2.2.0&#x000A;$ make&#x000A;$ make install prefix=$STOW/stow-2.2.0&#x000A;$ cd $STOW&#x000A;$ ./stow-2.2.0/bin/stow stow-2.2.0&#x000A;$ source ~/.bashrc</textarea>
-    </p>
-      </div>
-      <div class='spacer bottom'></div>
-    </section>
-    <section class='slide'>
-      <div class='spacer top'></div>
-      <div class='content'>
-        <h2>Install the JDK</h2>
-        
-        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget --no-check-certificate http://bit.ly/jdk-7u12-x64 -O jdk-7u12.tar.gz&#x000A;$ tar -xzvf jdk-7u12.tar.gz&#x000A;$ mv jdk1.7.0_12 $STOW&#x000A;$ cd $STOW; stow jdk1.7.0_12; source ~/.bashrc&#x000A;$ which java&#x000A;#=> ~/opt/bin/java&#x000A;$ java -version&#x000A;#=> java version "1.7.0_12-ea"</textarea>
-    </p>
-      </div>
-      <div class='spacer bottom'></div>
-    </section>
-    <section class='slide'>
-      <div class='spacer top'></div>
-      <div class='content'>
-        <h2>Install JRuby</h2>
-        
-        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/jruby-174&#x000A;$ tar -xzvf jruby-bin-1.7.4.tar.gz&#x000A;$ mv jruby-1.7.4 $STOW&#x000A;$ cd $STOW; stow jruby-1.7.4; source ~/.bashrc&#x000A;$ which jruby&#x000A;#=> ~/opt/bin/jruby&#x000A;$ jruby --version&#x000A;#=> jruby 1.7.4 (1.9.3p392)</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -140,17 +149,22 @@
       <div class='content'>
         <h2>Install gcc for C Extensions</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/gcc-src&#x000A;$ tar -xjvf gcc-4.8.0; cd gcc-4.8.0&#x000A;#TODO: Figure this out...</textarea>
+        <p>Due to a lack of time, ask your sysadmin to run:</p>
+        
+        <p><textarea class='code' display='none' mode='bash'>$ sudo yum install gcc&#x000A;$ gcc --version&#x000A;#=> gcc (GCC) 4.1.2</textarea>
     </p>
+        
+        <p>I'll update this presentation with how to install<br/>
+        gcc from source once I've actually done it.</p>
       </div>
       <div class='spacer bottom'></div>
     </section>
     <section class='slide'>
       <div class='spacer top'></div>
       <div class='content'>
-        <h2>Enable C Extensions in JRuby</h2>
+        <h2>Install Ruby 1.9.3</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem --version&#x000A;#=> 1.8.24&#x000A;$ echo "cext.enabled=true" >> ~/.jrubyrc</textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ \curl -L https://get.rvm.io | bash -s stable --autolibs=disabled&#x000A;$ rvm --version&#x000A;#=> 1.20.10&#x000A;$ rvm pkg install libyaml&#x000A;$ rvm pkg install zlib --verify-downloads 1&#x000A;$ rvm pkg install openssl&#x000A;$ rvm install 1.9.3 --with-opt-dir=$rvm_path/usr&#x000A;$ rvm use 1.9.3 --default&#x000A;$ ruby -v&#x000A;#=> ruby 1.9.3p429</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -160,7 +174,7 @@
       <div class='content'>
         <h2>Install chef as a gem</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem install chef&#x000A;#=>&#x000A;Building native extensions.  This could take a while...</textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ gem install chef --no-ri --no-rdoc&#x000A;#=> Building native extensions.  This could take a while...&#x000A;#=> 17 gems installed&#x000A;$ which chef-solo&#x000A;#=> ~/.rvm/gems/ruby-1.9.3-p429/bin/chef-solo&#x000A;$ chef-solo --version&#x000A;#=> Chef: 11.4.4</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -202,7 +216,88 @@
         <li>TODO: Integrate the steps presented into <a href="https://github.com/stevenhaddox/SUPPORT">SUPPORT</a></li>
         <li>TODO: Automate this process as a simple rake task</li>
         <li>TODO: Create sample non-sudo chef cookbooks</li>
+        <li>TODO: Find alternative to deprecated <code>rvm pkg</code></li>
         </ul>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Things I've Tried that Failed</h2>
+        
+        <h3>(for now...)</h3>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='left slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Installing JRuby to run Chef</h2>
+        
+        <ul>
+        <li>JRuby and the JDK installed easily</li>
+        <li>JRuby C extension mode was easy to turn on</li>
+        <li>Chef failed to install due to C extension support<br/>
+        being removed from JRuby a few releases ago apparently.</li>
+        </ul>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Install Ruby &amp; Dependencies</h2>
+        
+        <h3>(from source...)</h3>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Install libyaml for Ruby</h2>
+        
+        <p>This works:</p>
+        
+        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/libyaml-src&#x000A;$ tar -xzvf yaml-0.1.4.tar.gz&#x000A;$ cd yaml-0.1.4&#x000A;$ ./configure --prefix=$STOW/libyaml-0.1.4&#x000A;$ make&#x000A;$ make install prefix=$STOW/libyaml-0.1.4&#x000A;$ cd $STOW; stow libyaml-0.1.4; . ~/.bashrc</textarea>
+    </p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Install zlib for Ruby</h2>
+        
+        <p>This works:</p>
+        
+        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/zlib-src&#x000A;$ tar -xzvf zlib-1.2.8.tar.gz&#x000A;$ cd zlib-1.2.8&#x000A;$ ./configure --prefix=$STOW/zlib-1.2.8&#x000A;$ make&#x000A;$ make install prefix=$STOW/zlib-1.2.8&#x000A;$ cd $STOW; stow zlib-1.2.8; . ~/.bashrc</textarea>
+    </p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Install OpenSSL for Ruby</h2>
+        
+        <p>This works:</p>
+        
+        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/openssl-101c&#x000A;$ tar -xzvf openssl-1.0.1c.tar.gz&#x000A;$ cd openssl-1.0.1c&#x000A;$ ./config --prefix=$STOW/openssl-1.0.1c&#x000A;$ make&#x000A;$ make install prefix=$STOW/openssl-1.0.1c&#x000A;$ cd $STOW; stow openssl-1.0.1c; . ~/.bashrc&#x000A;$ which openssl&#x000A;#=> ~/opt/bin/openssl&#x000A;$ openssl version&#x000A;#=> OpenSSL 1.0.1c</textarea>
+    </p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Install Ruby 1.9.3 (source)</h2>
+        
+        <h2>This blows up:</h2>
+        
+        <p><textarea class='code' display='none' mode='bash'>$ wget http://bit.ly/ruby-193p429&#x000A;$ tar -xzvf ruby-1.9.3-p429.tar.gz&#x000A;$ cd ruby-1.9.3-p429&#x000A;$ ./configure --prefix=$STOW/ruby-1.9.3-p429 --with-opt-dir=$STOW/../&#x000A;$ make #<-- goes kaboom&#x000A;$ make install prefix=$STOW/ruby-1.9.3-p429</textarea>
+    </p>
       </div>
       <div class='spacer bottom'></div>
     </section>
