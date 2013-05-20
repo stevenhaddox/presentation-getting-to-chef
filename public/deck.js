@@ -1,1 +1,1 @@
-deck.js
+../deck.js
