@@ -29,21 +29,26 @@
       <div class='content'>
         <h1>Getting to Chef</h1>
         
-        <h3>Automate provisioning a server to run chef without sudo</h3>
+        <p>&nbsp;</p>
         
-        <h4>@stevenhaddox [App.net, Twitter]</h4>
+        <h3>Automate provisioning a server to run chef sans sudo</h3>
+        
+        <p>&nbsp;</p>
+        
+        <h4>@stevenhaddox [GitHub, App.net, Twitter]</h4>
       </div>
       <div class='spacer bottom'></div>
     </section>
-    <section class='left slide'>
+    <section class='slide'>
       <div class='spacer top'></div>
       <div class='content'>
-        <h1>What Is Assumed</h1>
+        <h2>Why Would You Do This?</h2>
         
         <ul>
-        <li>Vagrant VM with CentOS 5.9 Minimal</li>
-        <li>Non-sudo user on the VM (we'll use <code>sysadmin</code>)</li>
-        <li>OpenSSH installed</li>
+        <li>Corporate environment</li>
+        <li>Misinformed policies</li>
+        <li>Strict security team</li>
+        <li>Pick your battles</li>
         </ul>
       </div>
       <div class='spacer bottom'></div>
@@ -51,17 +56,61 @@
     <section class='left slide'>
       <div class='spacer top'></div>
       <div class='content'>
-        <h1>TDD It</h1>
+        <h2>What Is Assumed</h2>
+        
+        <ul>
+        <li>Vagrant VM with CentOS 5.9 Minimal</li>
+        <li>Non-sudo user on the VM</li>
+        <li>OpenSSH installed</li>
+        <li>Libraries pre-installed:
+        
+        <ul>
+        <li><code>$ perl -v; #=&gt; 5.8.8</code></li>
+        <li><code>$ python -V; #=&gt; 2.4.3</code></li>
+        </ul>
+        </li>
+        </ul>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <p><img src="images/luke.jpg" alt="&quot;Use the Source&quot;" /></p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='left slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>From the Outside In</h2>
         
         <ul>
         <li>Chef will install as a Ruby gem</li>
         <li>gcc is needed for chef's native extensions</li>
         <li>JRuby runs Ruby &amp; installs easily</li>
         <li>Java is needed for JRuby</li>
+        <li>GNU Stow manages software cleanly</li>
         </ul>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Infrastructure</h2>
         
+        <p><textarea class='code' display='none' mode='bash'>$ mkdir ~/src&#x000A;$ mkdir -p ~/opt/stow&#x000A;$ echo "export STOW=$HOME/opt/stow" >> ~/.bashrc&#x000A;$ echo "export SRC=$HOME/src" >> ~/.bashrc&#x000A;$ echo "export PATH=\$HOME/opt/bin:\$PATH" >> ~/.bashrc&#x000A;$ source ~/.bashrc</textarea>
+    </p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Install GNU Stow</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ mkdir ~/src&#x000A;$ mkdir ~/opt</textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/stow-src&#x000A;$ tar -xzvf stow-2.2.0.tar.gz&#x000A;$ cd stow-2.2.0&#x000A;$ ./configure --prefix=$STOW/stow-2.2.0&#x000A;$ make&#x000A;$ make install prefix=$STOW/stow-2.2.0&#x000A;$ cd $STOW&#x000A;$ ./stow-2.2.0/bin/stow stow-2.2.0&#x000A;$ source ~/.bashrc</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -71,7 +120,7 @@
       <div class='content'>
         <h2>Install the JDK</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ cd ~/src&#x000A;$ wget --no-check-certificate http://bit.ly/jdk-7u12-x64 -O jdk-7u12.tar.gz&#x000A;$ tar -xzvf jdk-7u12.tar.gz&#x000A;$ mv jdk1.7.0_12 ~/opt&#x000A;$ ~/opt/jdk1.7.0_12/bin/java -version&#x000A;#=> java version "1.7.0_12-ea"&#x000A;$ echo "export PATH=~/opt/jdk1.7.0_12/bin:$PATH" >> ~/.bashrc&#x000A;$ source ~/.bashrc&#x000A;$ which java&#x000A;#=> ~/opt/jdk1.7.0_12/bin/java</textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget --no-check-certificate http://bit.ly/jdk-7u12-x64 -O jdk-7u12.tar.gz&#x000A;$ tar -xzvf jdk-7u12.tar.gz&#x000A;$ mv jdk1.7.0_12 $STOW&#x000A;$ cd $STOW; stow jdk1.7.0_12; source ~/.bashrc&#x000A;$ which java&#x000A;#=> ~/opt/bin/java&#x000A;$ java -version&#x000A;#=> java version "1.7.0_12-ea"</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -81,7 +130,7 @@
       <div class='content'>
         <h2>Install JRuby</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ wget http://bit.ly/jruby-174&#x000A;$ tar -xzvf jruby-bin-1.7.4.tar.gz&#x000A;$ jruby-1.7.4/bin/jruby --version&#x000A;$ mv jruby-1.7.4 ~/opt&#x000A;$ echo "export PATH=~/opt/jruby-1.7.4/bin:$PATH" >> ~/.bashrc&#x000A;$ source ~/.bashrc&#x000A;$ which jruby&#x000A;#=> ~/opt/jruby-1.7.4/bin/jruby&#x000A;$ jruby --version&#x000A;#=> jruby 1.7.4 (1.9.3p392)</textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/jruby-174&#x000A;$ tar -xzvf jruby-bin-1.7.4.tar.gz&#x000A;$ mv jruby-1.7.4 $STOW&#x000A;$ cd $STOW; stow jruby-1.7.4; source ~/.bashrc&#x000A;$ which jruby&#x000A;#=> ~/opt/bin/jruby&#x000A;$ jruby --version&#x000A;#=> jruby 1.7.4 (1.9.3p392)</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -90,6 +139,9 @@
       <div class='spacer top'></div>
       <div class='content'>
         <h2>Install gcc for C Extensions</h2>
+        
+        <p><textarea class='code' display='none' mode='bash'>$ cd $SRC&#x000A;$ wget http://bit.ly/gcc-src&#x000A;$ tar -xjvf gcc-4.8.0; cd gcc-4.8.0&#x000A;#TODO: Figure this out...</textarea>
+    </p>
       </div>
       <div class='spacer bottom'></div>
     </section>
@@ -98,7 +150,7 @@
       <div class='content'>
         <h2>Enable C Extensions in JRuby</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem --version&#x000A;#=> 1.8.24&#x000A;$ echo "cext.enabled=true" >> ~/.jrubyrc&#x000A;$ jruby -S gem install chef&#x000A;#=></textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem --version&#x000A;#=> 1.8.24&#x000A;$ echo "cext.enabled=true" >> ~/.jrubyrc</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -108,7 +160,7 @@
       <div class='content'>
         <h2>Install chef as a gem</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem install chef&#x000A;#=>&#x000A;Building native extensions.  This could take a while...&#x000A;# Errors without gcc currently installed</textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem install chef&#x000A;#=>&#x000A;Building native extensions.  This could take a while...</textarea>
     </p>
       </div>
       <div class='spacer bottom'></div>
@@ -116,9 +168,26 @@
     <section class='slide'>
       <div class='spacer top'></div>
       <div class='content'>
-        <h2>That's a BINGO!</h2>
+        <p><img src="images/bingo.jpg" alt="&quot;That's a BINGO!&quot;" /></p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>What Did We Accomplish?</h2>
         
-        <p>Chef should now allow you to automate your non-sudo user environment.</p>
+        <h4>You can now use Chef to automate your server environment without sudo!</h4>
+        
+        <ul>
+        <li>Tweak your chef scripts to:
+        
+        <ul>
+        <li>Install from source, vice package manager</li>
+        <li>Use stow to maintain/update source installs</li>
+        </ul>
+        </li>
+        </ul>
       </div>
       <div class='spacer bottom'></div>
     </section>
@@ -130,8 +199,8 @@
         <ul>
         <li>[✓] Automate ssh access to the server from Ruby</li>
         <li>[✓] Automate setting up a user's pubkey for key-based SSH authentication on all accessible accounts</li>
-        <li>TODO: Automate installing GNU Stow to manage software packages</li>
         <li>TODO: Integrate the steps presented into <a href="https://github.com/stevenhaddox/SUPPORT">SUPPORT</a></li>
+        <li>TODO: Automate this process as a simple rake task</li>
         <li>TODO: Create sample non-sudo chef cookbooks</li>
         </ul>
       </div>
