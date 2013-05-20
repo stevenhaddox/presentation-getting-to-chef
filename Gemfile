@@ -1,4 +1,7 @@
 source 'http://rubygems.org'
 
-gem 'keydown'
 gem 'rack'
+
+group :development do
+  gem 'keydown'
+end
