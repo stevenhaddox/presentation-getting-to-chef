@@ -91,3 +91,19 @@ $ jruby -S gem install chef
 Building native extensions.  This could take a while...
 # Errors without gcc currently installed
 ```
+
+!SLIDE
+
+## That's a BINGO!
+
+Chef should now allow you to automate your non-sudo user environment.
+
+!SLIDE left
+
+## Improvements
+
+* [✓] Automate ssh access to the server from Ruby
+* [✓] Automate setting up a user's pubkey for key-based SSH authentication on all accessible accounts
+* TODO: Automate installing GNU Stow to manage software packages
+* TODO: Integrate the steps presented into [SUPPORT](https://github.com/stevenhaddox/SUPPORT)
+* TODO: Create sample non-sudo chef cookbooks

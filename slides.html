@@ -108,8 +108,32 @@
       <div class='content'>
         <h2>Install chef as a gem</h2>
         
-        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem install chef&#x000A;#=>&#x000A;Building native extensions.  This could take a while...</textarea>
+        <p><textarea class='code' display='none' mode='bash'>$ jruby -S gem install chef&#x000A;#=>&#x000A;Building native extensions.  This could take a while...&#x000A;# Errors without gcc currently installed</textarea>
     </p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>That's a BINGO!</h2>
+        
+        <p>Chef should now allow you to automate your non-sudo user environment.</p>
+      </div>
+      <div class='spacer bottom'></div>
+    </section>
+    <section class='left slide'>
+      <div class='spacer top'></div>
+      <div class='content'>
+        <h2>Improvements</h2>
+        
+        <ul>
+        <li>[✓] Automate ssh access to the server from Ruby</li>
+        <li>[✓] Automate setting up a user's pubkey for key-based SSH authentication on all accessible accounts</li>
+        <li>TODO: Automate installing GNU Stow to manage software packages</li>
+        <li>TODO: Integrate the steps presented into <a href="https://github.com/stevenhaddox/SUPPORT">SUPPORT</a></li>
+        <li>TODO: Create sample non-sudo chef cookbooks</li>
+        </ul>
       </div>
       <div class='spacer bottom'></div>
     </section>
